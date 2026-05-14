@@ -1,6 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtUtils } from "./lib/jwtUtils";
 import { getDefaultDashboardRoute, getRouteOwner, isAuthRoute, UserRole } from "./lib/authUtils";
+import { getNewTokenWithRefreshToken } from "./services/auth.service";
+import { isTokenExpiringSoon } from "./lib/tokenUtils";
+
+export const refreshTokenMiddleware = async (refreshToken: string): Promise<boolean> => {
+    try {
+        const refresh = await getNewTokenWithRefreshToken(refreshToken);
+
+        if (!refresh) {
+            return false;
+        }
+
+        return true
+    } catch (error) {
+        console.log(`Error refreshing token: ${error}`);
+        return false
+    }
+};
 
 export async function proxy(request: NextRequest) {
     try {
@@ -26,6 +43,36 @@ export async function proxy(request: NextRequest) {
 
         const isAuth = isAuthRoute(pathname);
 
+        // proactively refresh token if it is expired
+        if (refreshToken && isValidAccessToken && (await isTokenExpiringSoon(accessToken))) {
+            const requestheaders = new Headers(request.headers);
+
+            const resposne = NextResponse.next({
+                request: {
+                    headers: requestheaders,
+                },
+            });
+
+            try {
+                const refreshed = await refreshTokenMiddleware(refreshToken);
+
+                if (refreshed) {
+                    requestheaders.set("x-token-refreshed", "1");
+                }
+
+                return NextResponse.next({
+                    request: {
+                        headers: requestheaders,
+                    },
+                    headers: resposne.headers,
+                });
+            } catch (error) {
+                console.log('Error refreshing token: ', error);
+            }
+
+            return resposne;
+        }
+
         // Rule-1: user is logged in and have access token then redirect user to dashboard page
         if (isAuth && isValidAccessToken) {
             return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
@@ -38,7 +85,7 @@ export async function proxy(request: NextRequest) {
 
         // Rule-3: user not logged in and typing to access protected routes then redirect user to login page
 
-        if(!accessToken || !isValidAccessToken){
+        if (!accessToken || !isValidAccessToken) {
             const loginUrl = new URL("/login", request.url);
             loginUrl.searchParams.set("redirect", pathname);
             return NextResponse.redirect(loginUrl);
