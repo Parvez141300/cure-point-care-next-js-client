@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtUtils } from "./lib/jwtUtils";
 import { getDefaultDashboardRoute, getRouteOwner, isAuthRoute, UserRole } from "./lib/authUtils";
-import { getNewTokenWithRefreshToken } from "./services/auth.service";
+import { getNewTokenWithRefreshToken, getUserInfo } from "./services/auth.service";
 import { isTokenExpiringSoon } from "./lib/tokenUtils";
 
 export const refreshTokenMiddleware = async (refreshToken: string): Promise<boolean> => {
@@ -78,12 +78,38 @@ export async function proxy(request: NextRequest) {
             return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
         }
 
-        // Rule-2: User trying to access public route
+        // Rule-2: user typing to reset password
+        if (pathname === "/reset-password") {
+            const email = request.nextUrl.searchParams.get("email");
+
+            // case-1: user has NeedPasswordChange true
+            if (accessToken && email) {
+                const userInfo = await getUserInfo();
+
+                if (userInfo.needPasswordChange) {
+                    return NextResponse.next();
+                }
+                else {
+                    return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
+                }
+            }
+
+            // case-2: user coming from forgot password page
+            if (email) {
+                return NextResponse.next();
+            }
+
+            const loginUrl = new URL("/login", request.url);
+            loginUrl.searchParams.set("redirect", pathname);
+            return NextResponse.redirect(loginUrl);
+        }
+
+        // Rule-3: User trying to access public route
         if (routeOwner === null) {
             return NextResponse.next();
         }
 
-        // Rule-3: user not logged in and typing to access protected routes then redirect user to login page
+        // Rule-4: user not logged in and typing to access protected routes then redirect user to login page
 
         if (!accessToken || !isValidAccessToken) {
             const loginUrl = new URL("/login", request.url);
@@ -91,12 +117,32 @@ export async function proxy(request: NextRequest) {
             return NextResponse.redirect(loginUrl);
         }
 
-        // Rule-4: user typing to access common protected routes
+        // Rule-5: Enforcing user to stay in reset password or verify email
+        // if (accessToken) {
+        //     const userInfo = await getUserInfo();
+
+        //     // needPasswordChange scenario
+        //     if (userInfo.needPasswordChange) {
+        //         if (pathname !== "/reset-password") {
+        //             const resetPasswordUrl = new URL("/reset-password", request.url);
+        //             resetPasswordUrl.searchParams.set("email", userInfo.email);
+        //             return NextResponse.redirect(resetPasswordUrl);
+        //         }
+
+        //         return NextResponse.next();
+        //     }
+
+        //     if (userInfo && !userInfo.needPasswordChange && pathname === "/reset-password") {
+        //         return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
+        //     }
+        // }
+
+        // Rule-5: user typing to access common protected routes
         if (routeOwner === "COMMON") {
             return NextResponse.next();
         }
 
-        // Rule-5: user tyring to access role based protected routes
+        // Rule-6: user tyring to access role based protected routes
         if (routeOwner === "ADMIN" || routeOwner === "DOCTOR" || routeOwner === "PATIENT") {
             if (routeOwner !== userRole) {
                 return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));

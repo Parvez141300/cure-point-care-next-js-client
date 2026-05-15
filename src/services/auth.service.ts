@@ -1,16 +1,17 @@
-"user server";
+"use server";
 
 import { setTokenInCookie } from "@/lib/tokenUtils";
+import { cookies } from "next/headers";
 
-const BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL
+const API_BASE_URL = process.env.API_BASE_URL
 
-if (!BASE_API_URL) {
-    throw new Error('NEXT_PUBLIC_BASE_API_URL is not defined');
+if (!API_BASE_URL) {
+    throw new Error('API_BASE_URL is not defined');
 }
 
 export async function getNewTokenWithRefreshToken(refreshToken: string): Promise<boolean> {
     try {
-        const res = await fetch(`${BASE_API_URL}/auth/refresh-token`, {
+        const res = await fetch(`${API_BASE_URL}/auth/refresh-token`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -44,4 +45,29 @@ export async function getNewTokenWithRefreshToken(refreshToken: string): Promise
         console.log(`error refreshing token ${error}`);
         return false;
     }
+}
+
+export const getUserInfo = async () => {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("accessToken")?.value || "";
+
+    if (!accessToken) {
+        return null;
+    }
+
+    const res = await fetch(`${API_BASE_URL}/auth/me`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Cookie: `accessToken=${accessToken}`,
+        },
+    });
+
+    if (!res.ok) {
+        return null;
+    }
+
+    const { data } = await res.json();
+
+    return data;
 }
