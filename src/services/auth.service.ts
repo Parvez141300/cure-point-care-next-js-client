@@ -50,6 +50,7 @@ export async function getNewTokenWithRefreshToken(refreshToken: string): Promise
 export const getUserInfo = async () => {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken")?.value || "";
+    const sessionToken = cookieStore.get("better-auth.session_token")?.value || "";
 
     if (!accessToken) {
         return null;
@@ -59,7 +60,7 @@ export const getUserInfo = async () => {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            Cookie: `accessToken=${accessToken}`,
+            Cookie: `accessToken=${accessToken}; better-auth.session_token=${sessionToken}`,
         },
     });
 
