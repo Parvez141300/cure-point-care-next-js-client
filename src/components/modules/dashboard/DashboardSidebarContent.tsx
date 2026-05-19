@@ -1,4 +1,5 @@
 "use client";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { getIconComponent } from "@/lib/iconMapper";
@@ -21,18 +22,20 @@ const DashboardSidebarContent = ({
   dashboardHome,
 }: DashboardSidebarContentProps) => {
   const pathname = usePathname();
+
   return (
-    <div className="hidden md:flex h-full w-64 flex-col border-r bg-card">
+    <div className="hidden md:flex h-full min-h-0 w-64 flex-col border-r bg-card">
       {/* logo / brand */}
-      <div className="flex h-16 items-center border-b px-6">
+      <div className="flex h-16 shrink-0 items-center border-b px-6">
         <Link href={dashboardHome}>
           <span className="text-xl font-bold text-primary">
             Cure Point Care
           </span>
         </Link>
       </div>
+
       {/* navigation area */}
-      <ScrollArea className="flex-1 px-3 py-4">
+      <ScrollArea className="flex-1 min-h-0 px-3 py-4">
         <nav className="space-y-6">
           {sidebarNavItems.map((section, sectionId) => (
             <div key={sectionId}>
@@ -41,23 +44,25 @@ const DashboardSidebarContent = ({
                   {section.title}
                 </h4>
               )}
+
               <div className="space-y-1">
                 {section.items.map((item, itemId) => {
                   const isActive = pathname === item.href;
                   const Icon = getIconComponent(item.icon);
+
                   return (
                     <Link
                       key={itemId}
                       href={item.href}
                       className={cn(
-                        "group flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
+                        "group flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
                         isActive
-                          ? "bg-primary text-accent hover:bg-primary hover:text-accent"
+                          ? "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
                           : "text-muted-foreground",
                       )}
                     >
-                      <Icon />
-                      <span className="ml-4">{item.title}</span>
+                      <Icon className="h-4 w-4 shrink-0" />
+                      <span className="ml-4 truncate">{item.title}</span>
                     </Link>
                   );
                 })}
@@ -65,24 +70,28 @@ const DashboardSidebarContent = ({
 
               {/* separator */}
               {sectionId < sidebarNavItems.length - 1 && (
-                <Separator className="my-2" />
+                <Separator className="my-4" />
               )}
             </div>
           ))}
         </nav>
       </ScrollArea>
+
       {/* user info at bottom */}
-      <div className="border-t px-3 py-4">
+      <div className="shrink-0 border-t px-3 py-4">
         <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
             <span className="text-sm font-semibold text-primary">
               {userInfo.name.charAt(0).toUpperCase()}
             </span>
           </div>
 
           <div className="flex-1 overflow-hidden">
-            <p className="text-sm font-medium truncate">{userInfo.name}</p>
-            <p className="text-xs text-muted-foreground capitalize">
+            <p className="truncate text-sm font-medium">
+              {userInfo.name}
+            </p>
+
+            <p className="text-xs capitalize text-muted-foreground">
               {userInfo.role.toLowerCase().replace("_", " ")}
             </p>
           </div>

@@ -51,7 +51,7 @@ const DashboardMobileSidebar = ({
                       key={itemId}
                       href={item.href}
                       className={cn(
-                        "flex items-center rounded-md px-3 py-1 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
+                        "flex gap-2 items-center rounded-md px-3 py-1 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
                         isActive && "bg-accent text-accent-foreground",
                       )}
                     >

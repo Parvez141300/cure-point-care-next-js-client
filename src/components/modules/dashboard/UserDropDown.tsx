@@ -1,9 +1,64 @@
-import React from 'react'
+"use client";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { IUserInfo } from "@/types/user.types";
+import { Key, LogOut, User } from "lucide-react";
+import Link from "next/link";
+import React from "react";
 
-const UserDropDown = () => {
-  return (
-    <div>UserDropDown</div>
-  )
+interface UserDropDownProps {
+  userInfo: IUserInfo;
 }
+const UserDropDown = ({ userInfo }: UserDropDownProps) => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size={"icon"} className="rounded-full">
+          <span className="font-semibold text-sm text-primary">
+            {userInfo.name.charAt(0).toUpperCase()}
+          </span>
+        </Button>
+      </DropdownMenuTrigger>
 
-export default UserDropDown
+      <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuLabel>
+          <div className="flex flex-col space-y-1">
+            <p>{userInfo.name}</p>
+            <p>{userInfo.email}</p>
+            <p>{userInfo.role.replace("_", " ")}</p>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+          <User className="mr-2 h-4 w-4" />
+          <Link href={"/my-profile"}>My Profile</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Key className="mr-2 h-4 w-4" />
+          <Link href={"/change-password"}>Change Password</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Key className="mr-2 h-4 w-4" />
+          <Link href={"/change-password"}>Change Password</Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem className="cursor-pointer text-red-500">
+          <Link href={"/logout"}>
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
+          </Link>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
+export default UserDropDown;
