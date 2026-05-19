@@ -1,5 +1,6 @@
 "use client";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import { getIconComponent } from "@/lib/iconMapper";
 import { cn } from "@/lib/utils";
 import { INavSections } from "@/types/dashboard.types";
@@ -40,25 +41,32 @@ const DashboardSidebarContent = ({
                   {section.title}
                 </h4>
               )}
-              {section.items.map((item, itemId) => {
-                const isActive = pathname === item.href;
-                const Icon = getIconComponent(item.icon);
-                return (
-                  <Link
-                    key={itemId}
-                    href={item.href}
-                    className={cn(
-                      "group flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                      isActive
-                        ? "bg-primary text-accent hover:bg-primary hover:text-accent"
-                        : "text-muted-foreground",
-                    )}
-                  >
-                    <Icon />
-                    <span className="ml-4">{item.title}</span>
-                  </Link>
-                );
-              })}
+              <div className="space-y-1">
+                {section.items.map((item, itemId) => {
+                  const isActive = pathname === item.href;
+                  const Icon = getIconComponent(item.icon);
+                  return (
+                    <Link
+                      key={itemId}
+                      href={item.href}
+                      className={cn(
+                        "group flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
+                        isActive
+                          ? "bg-primary text-accent hover:bg-primary hover:text-accent"
+                          : "text-muted-foreground",
+                      )}
+                    >
+                      <Icon />
+                      <span className="ml-4">{item.title}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+
+              {/* separator */}
+              {sectionId < sidebarNavItems.length - 1 && (
+                <Separator className="my-2" />
+              )}
             </div>
           ))}
         </nav>
