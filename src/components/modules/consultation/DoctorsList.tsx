@@ -3,16 +3,16 @@ import { getDoctors } from "@/app/(commonLayout)/consultation/_actions";
 import { useQuery } from "@tanstack/react-query";
 
 const DoctorsList = () => {
-  const { data } = useQuery({
+  const { data: doctorData } = useQuery({
     queryKey: ["doctors"],
     queryFn: () => getDoctors(),
   });
 
-  console.log(data);
+  console.log(doctorData);
 
   return <div>DoctorsList
     <br />
-    {data!.data?.map((doctor) => (
+    {doctorData!.data?.map((doctor) => (
       <div key={doctor.id}>{doctor.name}</div>
     ))}
   </div>;
