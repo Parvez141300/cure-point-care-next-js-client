@@ -20,21 +20,19 @@ import {
   YAxis,
 } from "recharts";
 
-
-
 interface IAppointmentBarChartProps {
   data: IBarchartData[];
 }
 
-const AppointmentBarChart = ({
-  data,
-}: IAppointmentBarChartProps) => {
+const AppointmentBarChart = ({ data }: IAppointmentBarChartProps) => {
   if (!data || !Array.isArray(data)) {
     return (
       <Card className="col-span-4">
         <CardHeader>
           <CardTitle>Appointment Trends of Month</CardTitle>
-          <CardDescription>Appointments chart details are in the Bar chart.</CardDescription>
+          <CardDescription>
+            Appointments chart details are in the Bar chart.
+          </CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-72">
           <p className="text-sm text-muted-foreground">
@@ -60,7 +58,9 @@ const AppointmentBarChart = ({
       <Card className="col-span-4">
         <CardHeader>
           <CardTitle>Appointment Trends of Month</CardTitle>
-          <CardDescription>Appointments chart details are in the Bar chart.</CardDescription>
+          <CardDescription>
+            Appointments chart details are in the Bar chart.
+          </CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-72">
           <p className="text-sm text-muted-foreground">
@@ -74,27 +74,13 @@ const AppointmentBarChart = ({
     <Card className="col-span-4">
       <CardHeader>
         <CardTitle>Appointment Trends of Month</CardTitle>
-        <CardDescription>Appointments chart details are in the Bar chart.</CardDescription>
+        <CardDescription>
+          Appointments chart details are in the Bar chart.
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex items-center justify-center h-72">
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart
-            data={formatedData}
-            dataKey={"appointments"}
-            style={{
-              width: "100%",
-              maxWidth: "700px",
-              maxHeight: "70vh",
-              aspectRatio: 1.618,
-            }}
-            responsive={true}
-            margin={{
-              top: 5,
-              right: 0,
-              left: 0,
-              bottom: 5,
-            }}
-          >
+          <BarChart data={formatedData} dataKey={"appointments"}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="month" />
             <YAxis width="auto" />

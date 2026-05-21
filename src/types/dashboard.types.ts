@@ -30,7 +30,7 @@ export interface IAdminDashboardData {
     totalRevenue: number;
     totalExpense: number;
     pieChartData: IPieChartData[];
-    barchartData: IBarchartData[];
+    barChartData: IBarchartData[];
 }
 
 export interface IPatientDashboardData {
