@@ -30,9 +30,9 @@ const UserDropDown = ({ userInfo }: UserDropDownProps) => {
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>
           <div className="flex flex-col space-y-1">
-            <p>{userInfo.name}</p>
-            <p>{userInfo.email}</p>
-            <p>{userInfo.role.replace("_", " ")}</p>
+            <p>Name: {userInfo.name}</p>
+            <p>Email: {userInfo.email}</p>
+            <p>Role: {userInfo.role.replace("_", " ")}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -44,14 +44,10 @@ const UserDropDown = ({ userInfo }: UserDropDownProps) => {
           <Key className="mr-2 h-4 w-4" />
           <Link href={"/change-password"}>Change Password</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Key className="mr-2 h-4 w-4" />
-          <Link href={"/change-password"}>Change Password</Link>
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
 
         <DropdownMenuItem className="cursor-pointer text-red-500">
-          <Link href={"/logout"}>
+          <Link href={"/logout"} className="flex items-center gap-2">
             <LogOut className="mr-2 h-4 w-4" />
             Logout
           </Link>
