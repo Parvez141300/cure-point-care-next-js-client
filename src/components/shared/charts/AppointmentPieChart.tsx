@@ -39,7 +39,7 @@ const AppointmentPieChart = ({
 }: IAppointmentPieChartProps) => {
   if (!data || !Array.isArray(data)) {
     return (
-      <Card className="col-span-2">
+      <Card className="md:col-span-2">
         <CardHeader>
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
@@ -61,7 +61,7 @@ const AppointmentPieChart = ({
 
   if (!formatedData.length || formatedData.every((item) => item.value === 0)) {
     return (
-      <Card className="col-span-2">
+      <Card className="md:col-span-2">
         <CardHeader>
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
@@ -83,7 +83,7 @@ const AppointmentPieChart = ({
     );
   };
   return (
-    <Card className="col-span-2">
+    <Card className="md:col-span-2">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>

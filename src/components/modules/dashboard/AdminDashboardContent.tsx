@@ -12,13 +12,13 @@ const AdminDashboardContent = () => {
   const { data: adminDashboardData } = useQuery({
     queryKey: ["admin-dashboard-data"],
     queryFn: getAdminDashboardData,
-    refetchOnWindowFocus: true, // refetch on window focus it means when the user comes back to the page it will be refetched
+    refetchOnWindowFocus: "always", // refetch on window focus it means when the user comes back to the page it will be refetched
   });
 
   const { data } = adminDashboardData as IApiResponse<IAdminDashboardData>;
 
   return (
-    <div>
+    <div className="space-y-5">
       {/* stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
         <StatsCard
@@ -71,7 +71,7 @@ const AdminDashboardContent = () => {
         />
       </div>
       {/* charts */}
-      <div>
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-5">
         <AppointmentBarChart data={data?.barChartData || []} />
         <AppointmentPieChart title="Appoiment Count" data={data?.pieChartData || []} />
       </div>

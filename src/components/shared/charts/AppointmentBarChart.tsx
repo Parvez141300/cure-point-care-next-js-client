@@ -27,7 +27,7 @@ interface IAppointmentBarChartProps {
 const AppointmentBarChart = ({ data }: IAppointmentBarChartProps) => {
   if (!data || !Array.isArray(data)) {
     return (
-      <Card className="col-span-4">
+      <Card className="md:col-span-4">
         <CardHeader>
           <CardTitle>Appointment Trends of Month</CardTitle>
           <CardDescription>
@@ -55,7 +55,7 @@ const AppointmentBarChart = ({ data }: IAppointmentBarChartProps) => {
     formatedData.every((item) => item.appointments === 0)
   ) {
     return (
-      <Card className="col-span-4">
+      <Card className="md:col-span-4">
         <CardHeader>
           <CardTitle>Appointment Trends of Month</CardTitle>
           <CardDescription>
@@ -71,7 +71,7 @@ const AppointmentBarChart = ({ data }: IAppointmentBarChartProps) => {
     );
   }
   return (
-    <Card className="col-span-4">
+    <Card className="md:col-span-4">
       <CardHeader>
         <CardTitle>Appointment Trends of Month</CardTitle>
         <CardDescription>
