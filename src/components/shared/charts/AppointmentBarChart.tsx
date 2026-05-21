@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { IBarchartData } from "@/types/dashboard.types";
 import { format } from "date-fns";
 import React from "react";
 import {
@@ -19,28 +20,21 @@ import {
   YAxis,
 } from "recharts";
 
-interface BarchartData {
-  month: Date | string;
-  count: number;
-}
 
-interface AppointmentBarChartProps {
-  data: BarchartData[];
-  title?: string;
-  description?: string;
+
+interface IAppointmentBarChartProps {
+  data: IBarchartData[];
 }
 
 const AppointmentBarChart = ({
   data,
-  title,
-  description,
-}: AppointmentBarChartProps) => {
+}: IAppointmentBarChartProps) => {
   if (!data || !Array.isArray(data)) {
     return (
       <Card className="col-span-4">
         <CardHeader>
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
+          <CardTitle>Appointment Trends of Month</CardTitle>
+          <CardDescription>Appointments chart details are in the Bar chart.</CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-72">
           <p className="text-sm text-muted-foreground">
@@ -65,8 +59,8 @@ const AppointmentBarChart = ({
     return (
       <Card className="col-span-4">
         <CardHeader>
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
+          <CardTitle>Appointment Trends of Month</CardTitle>
+          <CardDescription>Appointments chart details are in the Bar chart.</CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-72">
           <p className="text-sm text-muted-foreground">
@@ -79,8 +73,8 @@ const AppointmentBarChart = ({
   return (
     <Card className="col-span-4">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardTitle>Appointment Trends of Month</CardTitle>
+        <CardDescription>Appointments chart details are in the Bar chart.</CardDescription>
       </CardHeader>
       <CardContent className="flex items-center justify-center h-72">
         <ResponsiveContainer width="100%" height={300}>

@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { IPieChartData } from "@/types/dashboard.types";
 import React from "react";
 import {
   Legend,
@@ -17,13 +18,9 @@ import {
   Tooltip,
 } from "recharts";
 
-interface PieChartData {
-  status: string;
-  count: number;
-}
 
-interface AppointmentPieChartProps {
-  data: PieChartData[];
+interface IAppointmentPieChartProps {
+  data: IPieChartData[];
   title?: string;
   description?: string;
 }
@@ -39,7 +36,7 @@ const AppointmentPieChart = ({
   data,
   title,
   description,
-}: AppointmentPieChartProps) => {
+}: IAppointmentPieChartProps) => {
   if (!data || !Array.isArray(data)) {
     return (
       <Card className="col-span-2">
