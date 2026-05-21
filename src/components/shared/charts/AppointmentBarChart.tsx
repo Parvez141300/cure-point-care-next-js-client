@@ -6,43 +6,38 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { format } from "date-fns";
 import React from "react";
 import {
+  Bar,
+  BarChart,
+  CartesianGrid,
   Legend,
-  Pie,
-  PieChart,
-  PieSectorShapeProps,
   ResponsiveContainer,
-  Sector,
   Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
 
-interface PieChartData {
-  status: string;
+interface BarchartData {
+  month: Date | string;
   count: number;
 }
 
-interface AppointmentPieChartProps {
-  data: PieChartData[];
+interface AppointmentBarChartProps {
+  data: BarchartData[];
   title?: string;
   description?: string;
 }
 
-const CHART_COLORS = [
-  "oklch(0.72 0.19 45)",
-  "oklch(0.68 0.24 30)",
-  "oklch(0.61 0.21 55)",
-  "oklch(0.75 0.18 20)",
-  "oklch(0.58 0.26 35)",
-];
-const AppointmentPieChart = ({
+const AppointmentBarChart = ({
   data,
   title,
   description,
-}: AppointmentPieChartProps) => {
+}: AppointmentBarChartProps) => {
   if (!data || !Array.isArray(data)) {
     return (
-      <Card className="col-span-2">
+      <Card className="col-span-4">
         <CardHeader>
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
@@ -55,16 +50,20 @@ const AppointmentPieChart = ({
       </Card>
     );
   }
-
   const formatedData = data.map((item) => ({
-    name:
-      item.status.charAt(0).toUpperCase() + item.status.slice(1).toLowerCase(),
-    value: Number(item.count),
+    month:
+      typeof item.month === "string"
+        ? format(new Date(item.month), "MMM yyyy")
+        : item.month,
+    appointments: Number(item.count),
   }));
 
-  if (!formatedData.length || formatedData.every((item) => item.value === 0)) {
+  if (
+    !formatedData.length ||
+    formatedData.every((item) => item.appointments === 0)
+  ) {
     return (
-      <Card className="col-span-2">
+      <Card className="col-span-4">
         <CardHeader>
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
@@ -77,42 +76,47 @@ const AppointmentPieChart = ({
       </Card>
     );
   }
-  const MyCustomPie = (props: PieSectorShapeProps) => {
-    return (
-      <Sector
-        {...props}
-        fill={CHART_COLORS[props.index % CHART_COLORS.length]}
-      />
-    );
-  };
   return (
-    <Card className="col-span-2">
+    <Card className="col-span-4">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-
-      <CardContent>
+      <CardContent className="flex items-center justify-center h-72">
         <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie
-              data={formatedData}
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              outerRadius={80}
-              fill="#8884d8"
-              label
-              shape={MyCustomPie}
-            />
+          <BarChart
+            data={formatedData}
+            dataKey={"appointments"}
+            style={{
+              width: "100%",
+              maxWidth: "700px",
+              maxHeight: "70vh",
+              aspectRatio: 1.618,
+            }}
+            responsive={true}
+            margin={{
+              top: 5,
+              right: 0,
+              left: 0,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="month" />
+            <YAxis width="auto" />
             <Tooltip />
             <Legend />
-          </PieChart>
+            <Bar
+              dataKey={"appointments"}
+              fill="oklch(0.646 0.222 41.116)"
+              radius={[4, 4, 0, 0]}
+              maxBarSize={60}
+            />
+          </BarChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>
   );
 };
 
-export default AppointmentPieChart;
+export default AppointmentBarChart;
