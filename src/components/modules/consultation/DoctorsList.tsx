@@ -12,7 +12,7 @@ const DoctorsList = () => {
 
   return <div>DoctorsList
     <br />
-    {data?.map((doctor) => (
+    {data!.data?.map((doctor) => (
       <div key={doctor.id}>{doctor.name}</div>
     ))}
   </div>;
