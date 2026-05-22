@@ -104,6 +104,11 @@ export const adminNavItems: INavSections[] = [
                 icon: "Hospital",
             },
             {
+                title: "Doctors Management",
+                href: "/admin/dashboard/doctors-management",
+                icon: "Stethoscope",
+            },
+            {
                 title: "Doctor Schedules",
                 href: "/admin/dashboard/doctor-schedules-management",
                 icon: "Calendar",
